@@ -44,7 +44,6 @@ app.get("/db", adminAuth, (req, res) => {
 });
 //
 
-
 app.get("/NewActivities", (req, res) => {
   const currentDate = new Date().toLocaleTimeString("en-US", {
     timeZone: "Egypt",
@@ -134,8 +133,6 @@ app.post("/AddActivity", (req, res) => {
   // );
 });
 
-
-
 app.post("/AddNewCycle", (req, res) => {
   console.log(req.body);
 });
@@ -147,14 +144,10 @@ app.post("/EditBadge", (req, res) => {
 
 app.post("/EditCycle", (req, res) => {
   console.log(req.body);
-
 });
-
-
 
 app.post("/CreateBadge", (req, res) => {
   console.log(req.body);
-
 });
 
 const handleDbError = (err) => {
