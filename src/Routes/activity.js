@@ -16,7 +16,7 @@ router.get("/getInfoAll", function (req, res) {
   console.log("getting all the activities");
 
   const empid = req.user.id;
-  const sqlQuery = "SELECT * FROM Activity AND Activity.active = true";
+  const sqlQuery = "SELECT * FROM Activity WHERE Activity.active = true";
 
   return db
     .promise()
@@ -34,13 +34,20 @@ router.post("/getInfo", function (req, res) {
   const sqlQuery =
     "SELECT * FROM Activity WHERE Activity.id = ? AND Activity.active = true";
 
-  return db.query(sqlQuery, [actid], (err, result) => {
-    if (err) console.log("specific err", err);
-    console.log(result);
-    dbresult = result[0];
-    if (dbresult.length != 1) throw new Error("");
-    res.json(dbresult[0]);
-  });
+  return db
+    .promise()
+    .query(sqlQuery, [actid])
+    .then((result) => {
+      if (err) console.log("specific err", err);
+      console.log(result);
+      dbresult = result[0];
+      console.log(dbresult.length);
+      if (dbresult.length != 1) throw new Error("");
+      res.json(dbresult[0]);
+    })
+    .catch((err) => {
+      console.log("err", err);
+    });
 });
 
 // Define the about route

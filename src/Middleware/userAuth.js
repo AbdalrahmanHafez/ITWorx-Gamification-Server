@@ -19,6 +19,8 @@ const userAuth = (req, res, next) => {
     console.log("denied auth ok");
     res.status(403).send("unathorized");
   }
+
+  // next();
 };
 
 module.exports = userAuth;
