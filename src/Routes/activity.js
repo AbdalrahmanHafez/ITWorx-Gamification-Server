@@ -136,9 +136,129 @@ router.post("/querySubscibed", function (req, res) {
     });
 });
 
-// Define the about route
-router.get("/about", function (req, res) {
-  res.send("About us");
+router.get("/getNeedsReview", function (req, res) {
+  // TODO: admin auth middleware
+
+  const currentDate = moment().format("YYYY-MM-DD");
+
+  console.log("sending review Acitvites");
+
+  const sqlQuery =
+    "SELECT Activity.id as actId, Activity.name as actName, Activity.description as actDesc , Employee.id as empId, Employee.name as empName, EmployeeSubActivity.Done as done  FROM Employee INNER JOIN EmployeeSubActivity on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId INNER JOIN Cycle on Cycle.id = Activity.cycleId WHERE Cycle.startDate <= curdate() and Cycle.endDate >= curdate() AND Activity.active = 1 AND EmployeeSubActivity.Done is Null";
+
+  return db
+    .promise()
+    .query(sqlQuery)
+    .then((result) => {
+      let dbresult = result[0];
+      const formated = dbresult.map((obj, i) => {
+        return {
+          activity: {
+            id: obj.actId,
+            name: obj.actName,
+            desc: obj.actDesc,
+            done: obj.done,
+          },
+          employee: {
+            id: obj.empId,
+            name: obj.empName,
+          },
+        };
+      });
+      console.log("formated 1", formated);
+
+      res.status(200).send(formated);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
+router.get("/getNew", (req, res) => {
+  const currentDate = new Date().toLocaleTimeString("en-US", {
+    timeZone: "Egypt",
+  });
+  console.log("sending New Activities", currentDate);
+  db.query(
+    "SELECT * FROM Activity WHERE startDate > DATE_ADD(CURDATE(), INTERVAL -3 DAY)",
+    function (err, results, fields) {
+      console.log("new Acttivites result", results);
+      res.json(results);
+    }
+  );
+});
+
+router.post("/getYours", (req, res) => {
+  console.log(
+    "sending Your activities data",
+    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
+  );
+  db.query(
+    `SELECT * FROM Activity inner join EmployeeSubActivity on Activity.id = EmployeeSubActivity.ActivityId WHERE EmployeeSubActivity.EmployeeId = ${req.body.employeeId}`,
+    function (err, results, fields) {
+      console.log("Your Acttivites result", results);
+      res.json(results);
+    }
+  );
+});
+
+router.get("/getDoneReview", function (req, res) {
+  // TODO: admin auth middleware
+
+  const currentDate = moment().format("YYYY-MM-DD");
+
+  console.log("sending review Acitvites");
+
+  const sqlQuery =
+    "SELECT Activity.id as actId, Activity.name as actName, Activity.description as actDesc , Employee.id as empId, Employee.name as empName, EmployeeSubActivity.Done as done FROM Employee INNER JOIN EmployeeSubActivity on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId INNER JOIN Cycle on Cycle.id = Activity.cycleId WHERE Cycle.startDate <= curdate() and Cycle.endDate >= curdate() AND Activity.active = 1 AND EmployeeSubActivity.Done is Not Null";
+
+  return db
+    .promise()
+    .query(sqlQuery)
+    .then((result) => {
+      let dbresult = result[0];
+      const formated = dbresult.map((obj, i) => {
+        return {
+          activity: {
+            id: obj.actId,
+            name: obj.actName,
+            desc: obj.actDesc,
+            done: obj.done,
+          },
+          employee: {
+            id: obj.empId,
+            name: obj.empName,
+          },
+        };
+      });
+      console.log("formated 2", formated);
+
+      res.status(200).send(formated);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+router.post("/setAcception", function (req, res) {
+  const { actId, empId, eventType } = req.body;
+
+  console.log("setAcception", "emp id", empId, "act ID", actId);
+
+  let doneVal = eventType === "accept" ? 1 : 0;
+  const sqlQuery =
+    "UPDATE EmployeeSubActivity SET EmployeeSubActivity.Done = ? WHERE EmployeeSubActivity.EmployeeId = ? AND EmployeeSubActivity.ActivityId = ?";
+
+  return db
+    .promise()
+    .query(sqlQuery, [doneVal, empId, actId])
+    .then((result) => {
+      dbresult = result[0];
+      console.log(dbresult);
+      res.status(200).send("OK");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 module.exports = router;

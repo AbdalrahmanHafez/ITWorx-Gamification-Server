@@ -44,31 +44,6 @@ app.get("/db", adminAuth, (req, res) => {
 });
 //
 
-app.get("/NewActivities", (req, res) => {
-  const currentDate = new Date().toLocaleTimeString("en-US", {
-    timeZone: "Egypt",
-  });
-  console.log("sending New Activities", currentDate);
-  db.query(
-    "SELECT * FROM Activity WHERE startDate > DATE_ADD(CURDATE(), INTERVAL -3 DAY)",
-    function (err, results, fields) {
-      res.json(results);
-    }
-  );
-});
-
-app.post("/YourActivities", (req, res) => {
-  console.log(
-    "sending Your activities data",
-    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
-  );
-  db.query(
-    `SELECT * FROM Activity inner join EmployeeSubActivity on Activity.id = EmployeeSubActivity.ActivityId WHERE EmployeeSubActivity.EmployeeId = ${req.body.employeeId}`,
-    function (err, results, fields) {
-      res.json(results);
-    }
-  );
-});
 app.post("/EmployeeDepartments", (req, res) => {
   console.log(
     "sending employee departments data",
@@ -121,7 +96,6 @@ app.get("/DepartmentRanking", (req, res) => {
     res.json(results);
   });
 });
-
 app.post("/AddActivity", (req, res) => {
   console.log(req.body);
   //

@@ -26,7 +26,6 @@ router.get("/points", function (req, res) {
       if (dbresult.length != 1) throw new Error("");
       res.json(dbresult[0].points);
     });
-
 });
 
 router.get("/getPracticeName", function (req, res) {
@@ -45,7 +44,29 @@ router.get("/getPracticeName", function (req, res) {
       res.json(dbresult[0].name);
     })
     .catch((err) => console.log(err));
+});
 
+router.get("/getParticipatingEmployees", (req, res) => {
+  console.log(
+    "sending Participating Employees data",
+    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
+  );
+  db.query(
+    `Select E.name as EmployeeName, A.name as ActivityName, A.totalPoints as points, points as TotalPoints, B.Name as Badges, A.virtualRecognition
+    From Activity A
+    INNER Join EmployeeSubActivity ESA on ESA.ActivityId = A.id
+    INNER Join Employee E on E.id = ESA.EmployeeId
+    INNER Join EmployeeRanking ER on ER.id = E.id
+    LEFT OUTER Join EmployeeGainBadge EGB on E.id = EGB.employeeId
+    LEFT OUTER Join Badge B on B.id = EGB.badgeId
+    Where ESA.Done=1
+    GROUP BY E.name,  A.id
+  `,
+    function (err, results, fields) {
+      res.json(results);
+      console.log("participating employees", results);
+    }
+  );
 });
 
 // Define the about route

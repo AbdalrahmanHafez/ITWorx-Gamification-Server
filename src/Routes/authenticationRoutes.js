@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const allowedLoggedTime = 60 * 60 * 1000;
 const verifyUser = (email, password, isadminlogin) => {
-  // db.connect();
+  db.connect();
   const sqlQuery = isadminlogin
     ? "SELECT * FROM `Admin` WHERE email=? AND password=?"
     : "SELECT * FROM `Employee` WHERE isActive=true AND email=? AND password=?";
