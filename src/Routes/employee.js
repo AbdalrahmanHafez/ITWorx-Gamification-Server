@@ -14,6 +14,7 @@ router.use(function timeLog(req, res, next) {
 
 router.get("/points", function (req, res) {
   const empid = req.user.id;
+  console.log("getting points");
   // db.connect();
   const sqlQuery =
     "SELECT Employee.name, SUM(Activity.totalPoints) AS points FROM EmployeeSubActivity INNER JOIN Employee on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId WHERE EmployeeSubActivity.Done = 1 AND Employee.id = ?";
