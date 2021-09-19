@@ -12,6 +12,7 @@ const employeeRoutes = require("./Routes/employee");
 const badgeRoutes = require("./Routes/badge");
 const departmentRoutes = require("./Routes/department");
 const practiceRoutes = require("./Routes/practice");
+const cycleRoutes = require("./Routes/cycle");
 
 const app = express();
 app.use(
@@ -33,6 +34,7 @@ app.use("/employee", employeeRoutes);
 app.use("/badge", badgeRoutes);
 app.use("/department", departmentRoutes);
 app.use("/practice", practiceRoutes);
+app.use("/cycle", cycleRoutes);
 
 const db = require("./Service/databaseService");
 

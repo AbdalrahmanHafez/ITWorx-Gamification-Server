@@ -91,6 +91,7 @@ router.get("/adminGetBadges", (req, res) => {
     res.json(results);
   });
 });
+
 router.get("/EmployeeGainedBadges", (req, res) => {
   const userId = req.user.id;
   console.log(
