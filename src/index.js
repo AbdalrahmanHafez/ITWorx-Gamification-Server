@@ -9,6 +9,9 @@ const userAuth = require("./Middleware/userAuth");
 const adminAuth = require("./Middleware/adminAuth");
 const activityRoutes = require("./Routes/activity");
 const employeeRoutes = require("./Routes/employee");
+const badgeRoutes = require("./Routes/badge");
+const departmentRoutes = require("./Routes/department");
+const practiceRoutes = require("./Routes/practice");
 
 const app = express();
 app.use(
@@ -27,101 +30,15 @@ app.use(userAuth);
 require("./Routes/authenticationRoutes")(app);
 app.use("/activity", activityRoutes);
 app.use("/employee", employeeRoutes);
+app.use("/badge", badgeRoutes);
+app.use("/department", departmentRoutes);
+app.use("/practice", practiceRoutes);
 
 const db = require("./Service/databaseService");
 
 app.get("/", (req, res) => {
   // console.log(req.cookies);
   res.json({ message: "From the Node Server !" });
-});
-
-app.get("/db", adminAuth, (req, res) => {
-  console.log("db triggered");
-  db.query("SELECT * FROM `Employee`", function (err, results, fields) {
-    console.log(results); // results contains rows returned by server
-    res.send(results);
-  });
-});
-//
-
-app.post("/EmployeeDepartments", (req, res) => {
-  console.log(
-    "sending employee departments data",
-    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
-  );
-  db.query(
-    `SELECT * FROM EmployeeWorkDepartment WHERE EmployeeWorkDepartment.employeeId = ${req.body.employeeId}`,
-    function (err, results, fields) {
-      res.json(results);
-    }
-  );
-});
-app.post("/EmployeeGainedBadges", (req, res) => {
-  console.log(
-    "sending employee Gained Badges data",
-    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
-  );
-  db.query(
-    `SELECT * FROM EmployeeGainBadge INNER JOIN Badge WHERE EmployeeGainBadge.employeeId = ${req.body.employeeId}`,
-    function (err, results, fields) {
-      res.json(results);
-    }
-  );
-});
-app.get("/EmployeeRanking", (req, res) => {
-  console.log(
-    "sending employee Rankings data",
-    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
-  );
-  db.query(`SELECT * FROM EmployeeRanking`, function (err, results, fields) {
-    res.json(results);
-  });
-});
-app.get("/PracticeRanking", (req, res) => {
-  console.log(
-    "sending Practice Rankings data",
-    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
-  );
-  db.query(`SELECT * FROM PracticeRanking`, function (err, results, fields) {
-    res.json(results);
-  });
-});
-
-app.get("/DepartmentRanking", (req, res) => {
-  console.log(
-    "sending Departments Ranking data",
-    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
-  );
-  db.query(`SELECT * FROM DepartmentRanking`, function (err, results, fields) {
-    res.json(results);
-  });
-});
-app.post("/AddActivity", (req, res) => {
-  console.log(req.body);
-  //
-  // db.query(
-  //   "SELECT * FROM Activity inner join EmployeeSubActivity on Activity.id = EmployeeSubActivity.ActivityId",
-  //   function (err, results, fields) {
-  //     res.json(results);
-  //   }
-  // );
-});
-
-app.post("/AddNewCycle", (req, res) => {
-  console.log(req.body);
-});
-
-app.post("/EditBadge", (req, res) => {
-  console.log(req.body);
-  //
-});
-
-app.post("/EditCycle", (req, res) => {
-  console.log(req.body);
-});
-
-app.post("/CreateBadge", (req, res) => {
-  console.log(req.body);
 });
 
 const handleDbError = (err) => {

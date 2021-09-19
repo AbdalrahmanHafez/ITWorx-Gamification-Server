@@ -46,6 +46,16 @@ router.get("/getPracticeName", function (req, res) {
     .catch((err) => console.log(err));
 });
 
+router.get("/EmployeeRanking", (req, res) => {
+  console.log(
+    "sending employee Rankings data",
+    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
+  );
+  db.query(`SELECT * FROM EmployeeRanking`, function (err, results, fields) {
+    res.json(results);
+  });
+});
+
 router.get("/getParticipatingEmployees", (req, res) => {
   console.log(
     "sending Participating Employees data",

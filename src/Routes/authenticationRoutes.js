@@ -47,6 +47,10 @@ function routes(app) {
               signed: true,
               maxAge: allowedLoggedTime,
             });
+            res.cookie("isAdmin", isadminlogin, {
+              signed: false,
+              maxAge: allowedLoggedTime,
+            });
 
             res.status(200).send("OK");
           }

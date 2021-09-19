@@ -62,7 +62,7 @@ router.post("/subscribe", function (req, res) {
   //   timeZone: "Egypt",
   // });
 
-  console.log("employee subscibed to ", actid, "emp id", empid);
+  console.log("employee subscribed to ", actid, "emp id", empid);
 
   const sqlQuery =
     "INSERT INTO `EmployeeSubActivity` (`EmployeeId`, `ActivityId`, `startDate`, `Done`) VALUES (?, ?, ?, 0)";
@@ -240,12 +240,24 @@ router.get("/getDoneReview", function (req, res) {
     });
 });
 
+router.post("/AddActivity", (req, res) => {
+  console.log(req.body);
+  //
+  // db.query(
+  //   "SELECT * FROM Activity inner join EmployeeSubActivity on Activity.id = EmployeeSubActivity.ActivityId",
+  //   function (err, results, fields) {
+  //     res.json(results);
+  //   }
+  // );
+});
+
 router.post("/setAcception", function (req, res) {
-  const { actId, empId, eventType } = req.body;
+  let { actId, empId, eventType } = req.body;
 
   console.log("setAcception", "emp id", empId, "act ID", actId);
 
-  let doneVal = eventType === "accept" ? 1 : 0;
+  const doneVal = eventType === "accept" ? 1 : 0;
+
   const sqlQuery =
     "UPDATE EmployeeSubActivity SET EmployeeSubActivity.Done = ? WHERE EmployeeSubActivity.EmployeeId = ? AND EmployeeSubActivity.ActivityId = ?";
 
