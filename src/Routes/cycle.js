@@ -13,12 +13,16 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
-router.post("/AddNewCycle", (req, res) => {
-  console.log(req.body);
-});
+router.get("/getPlanned", (req, res) => {
+  console.log(
+    "sending planned Cycles",
+    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
+  );
+  const SQL_Query = "SELECT * FROM Cycle WHERE Cycle.endDate >= curdate() ";
 
-router.post("/EditCycle", (req, res) => {
-  console.log(req.body);
+  db.query(SQL_Query, function (err, results, fields) {
+    res.json(results);
+  });
 });
 
 router.get("/getCurrent", (req, res) => {
@@ -43,6 +47,22 @@ router.post("/editCurrent", (req, res) => {
     "UPDATE Cycle C SET C.name = ?, C.startDate = ?, C.endDate = ? WHERE C.id = ?",
     [name, startDate, endDate, id],
     function (err, results, fields) {
+      console.log(results);
+      res.json(results);
+    }
+  );
+});
+router.post("/addNew", (req, res) => {
+  console.log("addning new Cycle");
+  const adminId = req.user.id;
+
+  let { name, startDate, endDate } = req.body;
+  //
+  db.query(
+    "INSERT INTO Cycle(adminId, name, startDate, endDate) VALUES (?,?, ?, ?)",
+    [adminId, name, startDate, endDate],
+    function (err, results, fields) {
+      if (err) console.log(err);
       console.log(results);
       res.json(results);
     }
