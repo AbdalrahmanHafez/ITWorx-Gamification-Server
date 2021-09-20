@@ -57,7 +57,19 @@ router.get("/EmployeeRanking", (req, res) => {
   });
 });
 
-router.get("/DevelopersLeaderBoards", (req, res) => {
+router.get("/NonDevelopersLeaderBoard", (req, res) => {
+  console.log(
+    "sending Developers Rankings data",
+    new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
+  );
+  db.query(
+    `SELECT * FROM NonDeveloperRanking`,
+    function (err, results, fields) {
+      res.json(results);
+    }
+  );
+});
+router.get("/DevelopersLeaderBoard", (req, res) => {
   console.log(
     "sending Developers Rankings data",
     new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })

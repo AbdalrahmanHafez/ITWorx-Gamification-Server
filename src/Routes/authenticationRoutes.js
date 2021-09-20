@@ -34,7 +34,9 @@ function routes(app) {
     verifyUser(email, password, isadminlogin)
       .then((user) => {
         //if user log in success, generate a JWT token for the user with a secret key
-        const encodedData = { ...user, isAdmin: isadminlogin };
+        const isDeveloper = user.isDeveloper;
+        const encodedData = { ...user, isAdmin: isadminlogin, isDeveloper };
+        console.log("encoded data", encodedData);
         jwt.sign(
           encodedData,
           process.env.cookie_HMAC_secret,
