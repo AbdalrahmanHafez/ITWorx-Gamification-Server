@@ -2,6 +2,7 @@ var express = require("express");
 const db = require("../Service/databaseService");
 const bodyParser = require("body-parser");
 const moment = require("moment");
+const adminAuth = require("../Middleware/adminAuth");
 
 var router = express.Router();
 
@@ -13,7 +14,7 @@ router.use(function timeLog(req, res, next) {
   next();
 });
 
-router.get("/getPlanned", (req, res) => {
+router.get("/getPlanned", adminAuth, (req, res) => {
   console.log(
     "sending planned Cycles",
     new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })

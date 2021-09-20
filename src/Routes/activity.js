@@ -55,30 +55,58 @@ router.post("/getInfo", function (req, res) {
 router.post("/subscribe", function (req, res) {
   const actid = req.body.id;
   const empid = req.user.id;
+  const { isDeveloper } = req.user;
 
-  const currentDate = moment().format("YYYY-MM-DD");
-
-  // const currentDate = new Date().toLocaleDateString("en-US", {
-  //   timeZone: "Egypt",
-  // });
-
-  console.log("employee subscribed to ", actid, "emp id", empid);
-
-  const sqlQuery =
-    "INSERT INTO `EmployeeSubActivity` (`EmployeeId`, `ActivityId`, `startDate`, `Done`) VALUES (?, ?, ?, 0)";
-
-  return db
-    .promise()
-    .query(sqlQuery, [empid, actid, currentDate])
+  db.promise()
+    .query(
+      "SELECT * FROM Activity WHERE Activity.id = ? AND Activity.isDeveloper = ? AND Activity.active = 1 AND Activity.endDate > curdate()",
+      [actid, isDeveloper]
+    )
     .then((result) => {
       dbresult = result[0];
-      console.log(dbresult);
+      if (dbresult.length == 0) {
+        res.status(300).send("Can't subscribe to this Activity");
+      } else {
+        const sqlQuery =
+          "INSERT INTO `EmployeeSubActivity` (`EmployeeId`, `ActivityId`, `startDate`, `Done`) VALUES (?, ?, ?, 0)";
 
-      res.status(200).send("ok");
+        return db
+          .promise()
+          .query(sqlQuery, [empid, actid, currentDate])
+          .then((result) => {
+            dbresult = result[0];
+            console.log(dbresult);
+
+            res.status(200).send("ok");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+
+      // res.status(200).send("ok");
     })
     .catch((err) => {
       console.log(err);
     });
+
+  console.log("employee subscribed to ", actid, "emp id", empid);
+
+  // const sqlQuery =
+  //   "INSERT INTO `EmployeeSubActivity` (`EmployeeId`, `ActivityId`, `startDate`, `Done`) VALUES (?, ?, ?, 0)";
+
+  // return db
+  //   .promise()
+  //   .query(sqlQuery, [empid, actid, currentDate])
+  //   .then((result) => {
+  //     dbresult = result[0];
+  //     console.log(dbresult);
+
+  //     res.status(200).send("ok");
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 });
 router.post("/unsubscribe", function (req, res) {
   const actid = req.body.id;
