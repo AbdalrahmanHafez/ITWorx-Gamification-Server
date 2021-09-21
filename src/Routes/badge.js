@@ -99,7 +99,7 @@ router.get("/EmployeeGainedBadges", (req, res) => {
     new Date().toLocaleTimeString("en-US", { timeZone: "Egypt" })
   );
   db.query(
-    `SELECT * FROM EmployeeGainBadge INNER JOIN Badge WHERE EmployeeGainBadge.employeeId = ${userId}`,
+    `SELECT * FROM EmployeeGainBadge INNER JOIN Badge on Badge.id = EmployeeGainBadge.badgeId WHERE EmployeeGainBadge.employeeId = ${userId}`,
     function (err, results, fields) {
       res.json(results);
     }

@@ -93,7 +93,7 @@ router.get("/getParticipatingEmployees", (req, res) => {
     LEFT OUTER Join EmployeeGainBadge EGB on E.id = EGB.employeeId
     LEFT OUTER Join Badge B on B.id = EGB.badgeId
     Where ESA.Done=1
-    GROUP BY E.name,  A.id
+    GROUP BY E.id,  A.id
   `,
     function (err, results, fields) {
       res.json(results);

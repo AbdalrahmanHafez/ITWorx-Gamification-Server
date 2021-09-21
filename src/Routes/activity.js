@@ -172,7 +172,7 @@ router.get("/getNeedsReview", function (req, res) {
   console.log("sending review Acitvites");
 
   const sqlQuery =
-    "SELECT Activity.id as actId, Activity.name as actName, Activity.description as actDesc , Employee.id as empId, Employee.name as empName, EmployeeSubActivity.Done as done  FROM Employee INNER JOIN EmployeeSubActivity on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId INNER JOIN Cycle on Cycle.id = Activity.cycleId WHERE Cycle.startDate <= curdate() and Cycle.endDate >= curdate() AND Activity.active = 1 AND EmployeeSubActivity.Done is Null";
+    "SELECT Activity.id as actId, Activity.name as actName, Activity.description as actDesc , Employee.id as empId, Employee.name as empName, EmployeeSubActivity.Done as done  FROM Employee INNER JOIN EmployeeSubActivity on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId INNER JOIN Cycle on Cycle.id = Activity.cycleId WHERE Cycle.startDate <= curdate() and Cycle.endDate >= curdate() AND Activity.active = 1 AND EmployeeSubActivity.Done is Null OR EmployeeSubActivity.Done = 0 ";
 
   return db
     .promise()
@@ -238,7 +238,7 @@ router.get("/getDoneReview", function (req, res) {
   console.log("sending review Acitvites");
 
   const sqlQuery =
-    "SELECT Activity.id as actId, Activity.name as actName, Activity.description as actDesc , Employee.id as empId, Employee.name as empName, EmployeeSubActivity.Done as done FROM Employee INNER JOIN EmployeeSubActivity on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId INNER JOIN Cycle on Cycle.id = Activity.cycleId WHERE Cycle.startDate <= curdate() and Cycle.endDate >= curdate() AND Activity.active = 1 AND EmployeeSubActivity.Done is Not Null";
+    "SELECT Activity.id as actId, Activity.name as actName, Activity.description as actDesc , Employee.id as empId, Employee.name as empName, EmployeeSubActivity.Done as done FROM Employee INNER JOIN EmployeeSubActivity on Employee.id = EmployeeSubActivity.EmployeeId INNER JOIN Activity on Activity.id = EmployeeSubActivity.ActivityId INNER JOIN Cycle on Cycle.id = Activity.cycleId WHERE Cycle.startDate <= curdate() and Cycle.endDate >= curdate() AND Activity.active = 1 AND EmployeeSubActivity.Done = 1";
 
   return db
     .promise()
