@@ -51,5 +51,5 @@ const port = process.env.PORT || 8080;
 db.on("error", handleDbError);
 
 app.listen(port, () =>
-  console.log(`server is listening at http://localhost:${port}`)
+  console.log(`server is listening at port:${port}`)
 );
