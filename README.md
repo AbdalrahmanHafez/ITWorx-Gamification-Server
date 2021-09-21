@@ -1,4 +1,4 @@
-# GamificationServer
+# ITWorx-Gamification Node Server
 ## As usual start by Installing the Dependencies using `NPM install`, while that finishes, see the following
 ### This project reqires you to fill the **.env** file with the following Keys:
 
